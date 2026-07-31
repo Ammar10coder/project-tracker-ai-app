@@ -31,6 +31,10 @@ CONTENT_TYPES = {
     ".html": "text/html; charset=utf-8",
     ".js": "application/javascript; charset=utf-8",
     ".css": "text/css; charset=utf-8",
+    ".jpeg": "image/jpeg",
+    ".jpg": "image/jpeg",
+    ".png": "image/png",
+    ".ico": "image/x-icon",
 }
 
 
@@ -105,6 +109,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send_file(os.path.join(paths.WEB_DIR, "app.js"), CONTENT_TYPES[".js"])
         elif self.path == "/style.css":
             self._send_file(os.path.join(paths.WEB_DIR, "style.css"), CONTENT_TYPES[".css"])
+        elif self.path == "/kelvin6k_logo.jpeg":
+            self._send_file(os.path.join(paths.WEB_DIR, "kelvin6k_logo.jpeg"), CONTENT_TYPES[".jpeg"])
         elif self.path == "/api/status":
             self._send_json(_build_status())
         elif self.path == "/api/settings":
