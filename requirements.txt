@@ -1,0 +1,13 @@
+google-genai
+telethon
+pydantic
+requests
+httpx
+cryptography
+certifi
+apscheduler
+sqlalchemy
+reportlab
+pydrive2
+groq
+openai

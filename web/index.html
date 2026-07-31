@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Project Tracker AI</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="titlebar-dots">
+    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+  </div>
+  <div class="titlebar-brand">
+    <span class="titlebar-label">Project Tracker AI</span>
+  </div>
+</div>
+
+<div class="window">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Local control panel</p>
+      <h1>Project Tracker AI</h1>
+      <p class="sub">Runs entirely on this computer — no Docker, no server. Start it when you want updates tracked, stop it when you're done.</p>
+    </div>
+    <div class="status-card">
+      <span class="hud-corner tl"></span><span class="hud-corner br"></span>
+      <span class="pulse-ring" id="pulse-ring"></span>
+      <span class="status-dot" id="status-dot"></span>
+      <div class="status-text">
+        <span class="status-label" id="status-label">Checking…</span>
+        <span class="status-sub" id="status-sub"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-dashboard">
+    <div class="controls">
+      <button class="btn btn-start" id="start-btn">▶ Start bot</button>
+      <button class="btn btn-stop" id="stop-btn" disabled>■ Stop bot</button>
+      <button class="btn btn-ghost" id="refresh-btn">↻ Refresh</button>
+    </div>
+    <p class="feedback" id="feedback"></p>
+
+    <div class="log-panel">
+      <div class="log-header">
+        <h2>Live activity</h2>
+        <span class="log-meta" id="log-meta">—</span>
+      </div>
+      <pre class="log-body" id="log-body">No activity yet.</pre>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-settings">
+    <div class="card">
+      <h3>Telegram</h3>
+      <p class="hint">From my.telegram.org — API ID / API Hash for your Telegram account, plus the group chat name to listen in.</p>
+      <div class="grid-2">
+        <div class="field">
+          <label>API ID</label>
+          <input id="s-API_ID" placeholder="1234567" />
+        </div>
+        <div class="field">
+          <label>API Hash</label>
+          <input id="s-API_HASH" placeholder="abcdef1234567890" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Phone number (with country code)</label>
+        <input id="s-PHONE" placeholder="+91XXXXXXXXXX" />
+      </div>
+      <div class="field">
+        <label>Target group chat name</label>
+        <input id="s-TARGET_GROUP_NAME" placeholder="KELVIN6K WORK FLOW & UPDATES" />
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>AI keys</h3>
+      <p class="hint">Gemini is used first; Groq and OpenRouter are automatic fallbacks if Gemini is unavailable. Only Gemini is required.</p>
+      <div class="field">
+        <label>Gemini API key</label>
+        <input id="s-GEMINI_API_KEY" placeholder="AIza..." />
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Groq API key (optional)</label>
+          <input id="s-GROQ_API_KEY" placeholder="gsk_..." />
+        </div>
+        <div class="field">
+          <label>OpenRouter API key (optional)</label>
+          <input id="s-OPENROUTER_API_KEY" placeholder="sk-or-..." />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Email reports</h3>
+      <p class="hint">Uses Gmail SMTP. The app password is a 16-character code from your Google Account → Security → App passwords (not your normal Gmail password).</p>
+      <div class="grid-2">
+        <div class="field">
+          <label>Gmail address</label>
+          <input id="s-GMAIL_USER" placeholder="you@gmail.com" />
+        </div>
+        <div class="field">
+          <label>Gmail app password</label>
+          <input id="s-GMAIL_APP_PASSWORD" placeholder="16-character app password" type="password" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Send daily reports to</label>
+        <input id="s-REPORT_RECIPIENT_EMAIL" placeholder="you@gmail.com" />
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Google Drive</h3>
+      <p class="hint">Reports are uploaded into a folder per person. Click Connect once per computer — it opens your browser to sign in with Google.</p>
+      <div class="field">
+        <label>Target Drive folder ID (optional — from the folder's URL)</label>
+        <input id="s-DRIVE_TARGET_FOLDER_ID" placeholder="1zwpirrWs2X0..." />
+      </div>
+      <div class="save-row">
+        <span class="pill off" id="drive-pill">Not connected</span>
+        <button class="btn btn-ghost" id="drive-connect-btn">Connect Google Drive</button>
+      </div>
+    </div>
+
+    <div class="save-row" style="margin: 4px 0 30px;">
+      <button class="btn btn-start" id="save-settings-btn">Save settings</button>
+      <span class="feedback" id="settings-feedback"></span>
+    </div>
+  </div>
+
+  <p class="window-footer">Data, session, and reports are stored in the "data", "config" and "reports" folders next to this app.</p>
+</div>
+
+<div class="modal-overlay" id="login-modal">
+  <div class="modal-box">
+    <h3 id="login-title">Telegram login</h3>
+    <p id="login-desc">Enter the phone number linked to your Telegram account.</p>
+    <div class="field" id="login-field">
+      <input id="login-input" placeholder="+91XXXXXXXXXX" />
+    </div>
+    <p class="feedback err" id="login-error"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="login-cancel-btn">Cancel</button>
+      <button class="btn btn-start" id="login-submit-btn">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
